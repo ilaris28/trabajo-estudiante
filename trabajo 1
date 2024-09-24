@@ -1,0 +1,102 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+struct Estudiante {
+    std::string nombre;
+    int codigo;
+    float nota;
+    Estudiante* siguiente; 
+};
+
+Estudiante* crearEstudiante(const std::string& nombre, int codigo, float nota) {
+    Estudiante* nuevoEstudiante = new Estudiante;
+    nuevoEstudiante->nombre = nombre;
+    nuevoEstudiante->codigo = codigo;
+    nuevoEstudiante->nota = nota;
+    nuevoEstudiante->siguiente = nullptr; 
+    return nuevoEstudiante;
+}
+
+void insertarEstudiante(Estudiante* &pac, Estudiante* nuevoEstudiante) {
+    nuevoEstudiante->siguiente = pac; 
+    pac = nuevoEstudiante; 
+}
+
+void ordenarPorNota(Estudiante* pac) {
+    if (pac == nullptr) return;
+
+    bool intercambiado;
+    do {
+        Estudiante* actual = pac;
+        intercambiado = false; 
+
+        while (actual->siguiente != nullptr) {
+            if (actual->nota < actual->siguiente->nota) {
+                std::swap(actual->nombre, actual->siguiente->nombre);
+                std::swap(actual->codigo, actual->siguiente->codigo);
+                std::swap(actual->nota, actual->siguiente->nota);
+                intercambiado = true;
+            }
+            actual = actual->siguiente;
+        }
+    } while (intercambiado);
+}
+
+void imprimirLista(Estudiante* pac) {
+    Estudiante* actual = pac;
+    while (actual != nullptr) {
+        std::cout << "Nombre: " << actual->nombre
+                  << ", Codigo: " << actual->codigo
+                  << ", Nota: " << actual->nota << std::endl;
+        actual = actual->siguiente; 
+    }
+}
+
+void ordenarPorCodigo(Estudiante* pac) {
+    if (pac == nullptr) return;
+
+    bool intercambiado;
+    do {
+        Estudiante* actual = pac;
+        intercambiado = false;
+
+        while (actual->siguiente != nullptr) {
+            if (actual->codigo > actual->siguiente->codigo) {
+                std::swap(actual->nombre, actual->siguiente->nombre);
+                std::swap(actual->codigo, actual->siguiente->codigo);
+                std::swap(actual->nota, actual->siguiente->nota);
+                intercambiado = true;
+            }
+            actual = actual->siguiente;
+        }
+    } while (intercambiado);
+}
+
+int main() {
+    Estudiante* listaEstudiantes = nullptr;
+
+    
+    insertarEstudiante(listaEstudiantes, crearEstudiante("Cristian Lopez", 100, 90));
+    insertarEstudiante(listaEstudiantes, crearEstudiante("Cruz Riasco", 102, 97.5));
+    insertarEstudiante(listaEstudiantes, crearEstudiante("Hector Palacios", 105, 89.3));
+
+    
+    std::cout << "Lista de estudiantes ordenada por nota:" << std::endl;
+    ordenarPorNota(listaEstudiantes);
+    imprimirLista(listaEstudiantes);
+
+
+    std::cout << "Lista de estudiantes ordenada por código:" << std::endl;
+    ordenarPorCodigo(listaEstudiantes);
+    imprimirLista(listaEstudiantes);
+
+    Estudiante* temp;
+    while (listaEstudiantes != nullptr) {
+        temp = listaEstudiantes;
+        listaEstudiantes = listaEstudiantes->siguiente;
+        delete temp;
+    }
+
+    return 0;
+}
